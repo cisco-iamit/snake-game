@@ -3,9 +3,6 @@ import settings as C
 
 
 class Snake:
-    """class for moving objects
-    """
-
     def __init__(self, screen):
         self.headx = 100
         self.heady = 100
@@ -22,7 +19,7 @@ class Snake:
 
     def move(self, cbk_dead, cbk_apple):
         pygame.draw.circle(self.screen, (0, 0, 0), (self.elements[-1][0],
-                                                 self.elements[-1][1]), C.RADIUS)
+                                                    self.elements[-1][1]), C.RADIUS)
         self.elements.pop()
         self.headx += self.speed[0]
         self.heady += self.speed[1]
@@ -40,4 +37,4 @@ class Snake:
         self.elements.append(self.elements[-1])
 
     def get_head(self):
-        return (self.headx, self.heady)
+        return self.headx, self.heady

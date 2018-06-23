@@ -5,6 +5,7 @@ import random
 
 import settings as C
 from snake import Snake
+import requests
 
 
 class SnakeGame:
@@ -15,6 +16,25 @@ class SnakeGame:
         self.screen = pygame.display.set_mode(C.RES)
         self.snake = Snake(self.screen)
         pygame.display.set_caption(C.WINDOW_CAPTION)
+
+    def post_score(self, score):
+        # leaderboard URL
+        url ="http://88.99.84.62:5001/scores/"
+
+        # what we want to post
+        payload = {
+            'name': C.NAME,
+            'value': score
+        }
+
+        # send the request and receive a response
+        response = requests.post(url, data=payload)
+
+        # HTTP status code 200 is a successful request
+        # HTTP status code 201 means that a record has been created
+        if response.status_code == 201:
+            return True
+        return False
 
     def generate_walls(self):
         for n in range(20, C.RES[0], 20):
@@ -64,9 +84,18 @@ class SnakeGame:
                             cbk_apple=self.check_apple)
 
     def exit_dead(self):
+
+        score = (len(self.snake.elements) - C.START_LENGTH + 1) * C.DIFFICULTY
+
         print("Difficulty:\t%d" % C.DIFFICULTY)
         print("Bugs eaten:\t%d" % (len(self.snake.elements) - C.START_LENGTH + 1))
-        print("Score:\t\t%d" % ((len(self.snake.elements) - C.START_LENGTH + 1) * C.DIFFICULTY))
+        print("Score:\t\t%d" % score)
+
+        # post the score on the leaderboard
+        if self.post_score(score):
+            print("Your score has been posted on the leaderboard.")
+        else:
+            print("Your score could not be posted.")
         time.sleep(1)
         self.exit_game()
 
@@ -75,8 +104,6 @@ class SnakeGame:
         sys.exit()
 
     def check_dead(self):
-        """check_dead function
-        """
         if list(self.snake.get_head()) in self.snake.elements[1:]:
             self.exit_dead()
         if list(self.snake.get_head()) in self.wall:
