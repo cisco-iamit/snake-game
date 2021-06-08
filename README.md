@@ -2,6 +2,8 @@
 
 This is an implementation of the world-famous Snake game in Python.
 
+**Please note:** this repository was used as a demonstration at a programming class in 2018 and is no longer supported. Feel free to fork it.
+
 ## Install the Requirements
 
 Make sure you have Python 3 installed and run the following command in your terminal:
